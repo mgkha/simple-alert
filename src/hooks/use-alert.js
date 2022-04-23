@@ -1,5 +1,17 @@
-import { useContext, useEffect } from "react";
-import { AlertContext } from "../App";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import alertReducer from "../reducers/alert-reducer";
+
+const AlertContext = createContext([]);
+
+export const AlertProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(alertReducer, []);
+
+  return (
+    <AlertContext.Provider value={[state, dispatch]}>
+      {children}
+    </AlertContext.Provider>
+  );
+};
 
 export function useAlertReducer() {
   const [state, dispatch] = useContext(AlertContext);
