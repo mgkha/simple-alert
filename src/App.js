@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
 import { AlertExample } from "./components/alert-example";
 import AlertManager from "./components/alert-manager";
+import { AlertProvider } from "./hooks/use-alert";
 
 function App() {
   return (
-    <div>
+    <AlertProvider>
       <AlertExample />
 
       <Box sx={{ position: "absolute", top: 0, right: 0 }}>
@@ -12,7 +13,7 @@ function App() {
           <AlertManager />
         </Box>
       </Box>
-    </div>
+    </AlertProvider>
   );
 }
 

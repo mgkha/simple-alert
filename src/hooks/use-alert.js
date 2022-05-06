@@ -1,27 +1,28 @@
-import { append, getAlerts, remove } from "../reducers/alert";
-import { useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import alertReducer from "../reducers/alert-reducer";
+
+const AlertContext = createContext([]);
+
+export const AlertProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(alertReducer, []);
+
+  return (
+    <AlertContext.Provider value={[state, dispatch]}>
+      {children}
+    </AlertContext.Provider>
+  );
+};
 
 export function useAlertReducer() {
-  const alerts = useSelector(getAlerts);
+  const [state, dispatch] = useContext(AlertContext);
 
-  const addAlert =
-    ({ alertTitle, text, alertType, timeLimit, link, id }) =>
-    (dispatch) => {
-      dispatch(
-        append({
-          alertTitle,
-          text,
-          alertType,
-          timeLimit: parseInt(timeLimit) || 10,
-          link,
-          id: id || uuidv4(),
-        })
-      );
-    };
+  useEffect(() => {
+    state.forEach((al) => {
+      setTimeout(() => {
+        dispatch({ type: "remove", payload: al.id });
+      }, al.timeLimit * 1000);
+    });
+  }, [state, dispatch]);
 
-  const removeAlert = (id) => (dispatch) => {
-    dispatch(remove(id));
-  };
-  return { alerts, addAlert, removeAlert };
+  return [state, dispatch];
 }
