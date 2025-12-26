@@ -10,6 +10,20 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual run'
+        required: true
+        default: 'Manual trigger from UI'
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+        - staging
+        - production
+  
 
 permissions:
   contents: read
